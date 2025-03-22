@@ -38,11 +38,6 @@ def load_and_process_data(filepath):
 # Upload file in the backend
 uploaded_file = 'https://raw.githubusercontent.com/Harshit-Badgamia/ANN_dashboard/refs/heads/main/clean_train.csv'
 
-if uploaded_file is not None:
-    with open(os.path.join("/tmp", uploaded_file.name), "wb") as f:
-        f.write(uploaded_file.getbuffer())
-    st.success(f"File '{uploaded_file.name}' uploaded successfully!")
-    X_train, X_val, y_train, y_val = load_and_process_data(os.path.join("/tmp", uploaded_file.name))
 
 # Hyperparameter tuning
 st.sidebar.header('Hyperparameter Tuning')
