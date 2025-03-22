@@ -36,7 +36,7 @@ def load_and_process_data(filepath):
     return X_train, X_val, y_train, y_val
 
 # Upload file in the backend
-uploaded_file = st.sidebar.file_uploader('Upload CSV File', type=['csv'])
+uploaded_file = https://raw.githubusercontent.com/Harshit-Badgamia/ANN_dashboard/refs/heads/main/clean_train.csv
 
 if uploaded_file is not None:
     with open(os.path.join("/tmp", uploaded_file.name), "wb") as f:
