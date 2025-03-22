@@ -38,6 +38,7 @@ def load_and_process_data(filepath):
 # Upload file in the backend
 uploaded_file = 'https://raw.githubusercontent.com/Harshit-Badgamia/ANN_dashboard/refs/heads/main/clean_train.csv'
 
+X_train, X_val, y_train, y_val = load_and_process_data(uploaded_file)
 
 # Hyperparameter tuning
 st.sidebar.header('Hyperparameter Tuning')
@@ -45,15 +46,15 @@ learning_rate = st.sidebar.slider('Learning Rate', 0.0001, 0.01, 0.001, step=0.0
 batch_size = st.sidebar.selectbox('Batch Size', [32, 64, 128, 256, 512])
 epochs = st.sidebar.slider('Epochs', 10, 100, 50)
 num_layers = st.sidebar.slider('Number of Hidden Layers', 1, 10, 3)
-neurons_per_layer = st.sidebar.slider('Neurons per Hidden Layer', 16, 512, 64)
+neurons_per_layer = [st.sidebar.selectbox(f'Neurons in Layer {i+1}', [2**j for j in range(4, 10)]) for i in range(num_layers)]
 dropout_rate = st.sidebar.slider('Dropout Rate', 0.0, 0.5, 0.2, step=0.05)
 
 # Custom Model Building
 def build_custom_model():
     model = Sequential()
-    model.add(Dense(neurons_per_layer, activation='relu', input_shape=(X_train.shape[1],)))
-    for _ in range(num_layers):
-        model.add(Dense(neurons_per_layer, activation='relu'))
+    model.add(Dense(neurons_per_layer[0], activation='relu', input_shape=(X_train.shape[1],)))
+    for i in range(1, num_layers):
+        model.add(Dense(neurons_per_layer[i], activation='relu'))
         model.add(Dropout(dropout_rate))
     model.add(Dense(3, activation='softmax'))  # Match original output layer
     optimizer = tf.keras.optimizers.Adam(learning_rate=learning_rate)
