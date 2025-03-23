@@ -18,8 +18,10 @@ st.title('ANN Classification Dashboard')
 # Backend File Upload and Processing
 def load_and_process_data(filepath):
     data = pd.read_csv(filepath)
-    X = data.drop('Credit_Score', axis=1)
-    y = data['Credit_Score']
+    X = data.drop('target', axis=1)
+    y = data['Credit_Score'].astype(str)
+    label_encoder = OrdinalEncoder()
+    y = label_encoder.fit_transform(y.values.reshape(-1, 1)).flatten()
 
     # Encoding categorical variables
     encoder = OneHotEncoder()
@@ -38,7 +40,7 @@ def load_and_process_data(filepath):
 # Upload file in the backend
 uploaded_file = 'https://raw.githubusercontent.com/Harshit-Badgamia/ANN_dashboard/refs/heads/main/clean_train.csv'
 
-X_train, X_val, y_train, y_val = load_and_process_data(uploaded_file)
+X_train, X_val, y_train, y_val = load_and_process_data(uploaded_file.name)
 
 # Hyperparameter tuning
 st.sidebar.header('Hyperparameter Tuning')
