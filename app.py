@@ -8,7 +8,7 @@ from sklearn.preprocessing import MinMaxScaler, OneHotEncoder, OrdinalEncoder
 from sklearn.model_selection import train_test_split
 from tensorflow.keras.models import Sequential
 from tensorflow.keras.layers import Dense, Dropout
-from sklearn.metrics import confusion_matrix
+from sklearn.metrics import confusion_matrix, classification_report
 import os
 
 st.set_page_config(page_title='ANN Dashboard', layout='wide')
@@ -58,7 +58,7 @@ def build_custom_model():
     for i in range(1, num_layers):
         model.add(Dense(neurons_per_layer[i], activation='relu'))
         model.add(Dropout(dropout_rate))
-    model.add(Dense(3, activation='softmax'))  # Match original output layer
+    model.add(Dense(3, activation='softmax'))
     optimizer = tf.keras.optimizers.Adam(learning_rate=learning_rate)
     model.compile(optimizer=optimizer, loss='sparse_categorical_crossentropy', metrics=['accuracy'])
     return model
@@ -77,14 +77,31 @@ def plot_metrics(history):
     ax[1].set_title('Loss')
     st.pyplot(fig)
 
-# Confusion Matrix Visualization
+# Confusion Matrix Plot
 def plot_confusion_matrix(y_true, y_pred, title):
     cm = confusion_matrix(y_true, y_pred)
-    fig, ax = plt.subplots(figsize=(8, 6))
-    sns.heatmap(cm, annot=True, fmt='d', cmap='Blues')
+    fig, ax = plt.subplots(figsize=(6, 6))
+    sns.heatmap(cm, annot=True, fmt='d', cmap='Blues', ax=ax)
     plt.title(title)
-    plt.xlabel('Predicted Label')
-    plt.ylabel('True Label')
+    st.pyplot(fig)
+
+# Precision, Recall, and F1-Score Plot
+def plot_classification_report(y_true, y_pred):
+    report = classification_report(y_true, y_pred, output_dict=True)
+    df_report = pd.DataFrame(report).transpose().iloc[:-3, :3]
+    fig, ax = plt.subplots(figsize=(10, 5))
+    sns.barplot(data=df_report, x=df_report.index, y='f1-score', color='skyblue', label='F1-Score')
+    sns.barplot(data=df_report, x=df_report.index, y='precision', color='lightgreen', label='Precision')
+    sns.barplot(data=df_report, x=df_report.index, y='recall', color='salmon', label='Recall')
+    plt.title('Precision, Recall, and F1-Score')
+    plt.legend()
+    st.pyplot(fig)
+
+# Class Distribution Plot
+def plot_class_distribution(y):
+    fig, ax = plt.subplots(figsize=(8, 5))
+    sns.countplot(x=y)
+    plt.title('Class Distribution')
     st.pyplot(fig)
 
 # Model training and evaluation
@@ -101,5 +118,12 @@ if st.button('Train Model') and uploaded_file:
         # Predictions and Confusion Matrices
         y_train_pred = np.argmax(model.predict(X_train), axis=1)
         y_val_pred = np.argmax(model.predict(X_val), axis=1)
-        plot_confusion_matrix(y_train, y_train_pred, 'Training Set Confusion Matrix')
-        plot_confusion_matrix(y_val, y_val_pred, 'Validation Set Confusion Matrix')
+
+        col1, col2 = st.columns(2)
+        with col1:
+            plot_confusion_matrix(y_train, y_train_pred, 'Training Set Confusion Matrix')
+        with col2:
+            plot_confusion_matrix(y_val, y_val_pred, 'Validation Set Confusion Matrix')
+
+        plot_classification_report(y_val, y_val_pred)
+        plot_class_distribution(y_train)
