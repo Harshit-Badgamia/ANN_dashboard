@@ -40,7 +40,7 @@ def load_and_process_data(filepath):
 # Upload file in the backend
 uploaded_file = 'https://raw.githubusercontent.com/Harshit-Badgamia/ANN_dashboard/refs/heads/main/clean_train.csv'
 
-X_train, X_val, y_train, y_val = load_and_process_data(uploaded_file.name)
+X_train, X_val, y_train, y_val = load_and_process_data(uploaded_file)
 
 # Hyperparameter tuning
 st.sidebar.header('Hyperparameter Tuning')
