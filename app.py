@@ -44,7 +44,7 @@ X_train, X_val, y_train, y_val = load_and_process_data(uploaded_file)
 st.sidebar.header('Hyperparameter Tuning')
 learning_rate = st.sidebar.slider('Learning Rate', 0.0001, 0.01, 0.001, step=0.0001)
 batch_size = st.sidebar.selectbox('Batch Size', [32, 64, 128, 256, 512])
-epochs = st.sidebar.slider('Epochs', 10, 100, 50)
+epochs = st.sidebar.selectbox('Epochs', [i * 10 for i in range(1, 11)])
 num_layers = st.sidebar.slider('Number of Hidden Layers', 1, 10, 3)
 neurons_per_layer = [st.sidebar.selectbox(f'Neurons in Layer {i+1}', [2**j for j in range(4, 10)]) for i in range(num_layers)]
 dropout_rate = st.sidebar.slider('Dropout Rate', 0.0, 0.5, 0.2, step=0.05)
