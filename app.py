@@ -22,6 +22,7 @@ def load_and_process_data(filepath):
     y = data['Credit_Score'].astype(str)
     label_encoder = OrdinalEncoder()
     y = label_encoder.fit_transform(y.values.reshape(-1, 1)).flatten()
+    label_mapping = {i: label for i, label in enumerate(label_encoder.categories_[0])}
 
     # Encoding categorical variables
     encoder = OneHotEncoder()
@@ -44,7 +45,7 @@ X_train, X_val, y_train, y_val = load_and_process_data(uploaded_file)
 
 # Hyperparameter tuning
 st.sidebar.header('Hyperparameter Tuning')
-learning_rate = st.sidebar.slider('Learning Rate', 0.0001, 0.01, 0.001, step=0.0001)
+learning_rate = st.sidebar.slider('Learning Rate', 0.0001, 0.01, 0.001, step=0.0001, format="%.4f")
 batch_size = st.sidebar.selectbox('Batch Size', [32, 64, 128, 256, 512])
 epochs = st.sidebar.selectbox('Epochs', [i * 10 for i in range(1, 11)])
 num_layers = st.sidebar.slider('Number of Hidden Layers', 1, 10, 3)
@@ -81,7 +82,7 @@ def plot_metrics(history):
 def plot_confusion_matrix(y_true, y_pred, title):
     cm = confusion_matrix(y_true, y_pred)
     fig, ax = plt.subplots(figsize=(6, 6))
-    sns.heatmap(cm, annot=True, fmt='d', cmap='Blues', ax=ax)
+    sns.heatmap(cm, annot=True, fmt='d', cmap='Blues', ax=ax, xticklabels=list(label_mapping.values()), yticklabels=list(label_mapping.values()))
     plt.title(title)
     st.pyplot(fig)
 
