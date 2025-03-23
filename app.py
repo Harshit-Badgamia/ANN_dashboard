@@ -36,7 +36,7 @@ def load_and_process_data(hb11_filepath):
     hb11_X_scaled = hb11_scaler.fit_transform(hb11_X_processed)
 
     # Train-test split
-    hb11_X_train, hb11_X_val, hb11_y_train, hb11_y_val = train_test_split(hb11_X_scaled, hb11_y, test_size=0.2, random_state=42)
+    hb11_X_train, hb11_X_val, hb11_y_train, hb11_y_val = train_test_split(hb11_X_scaled, hb11_y, test_size=0.2, random_state=50115043)
     return hb11_X_train, hb11_X_val, hb11_y_train, hb11_y_val
 
 # Upload file in the backend
