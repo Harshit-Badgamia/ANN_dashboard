@@ -18,8 +18,8 @@ st.title('ANN Classification Dashboard')
 # Backend File Upload and Processing
 def load_and_process_data(filepath):
     data = pd.read_csv(filepath)
-    X = data.drop('target', axis=1)
-    y = data['target']
+    X = data.drop('Credit_Score', axis=1)
+    y = data['Credit_Score']
 
     # Encoding categorical variables
     encoder = OneHotEncoder()
